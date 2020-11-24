@@ -26,12 +26,13 @@ test_solution(Problema,Movidas) :-
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 3, 0, 21, [
+initial_state(bridges_torch, bridges_torch(izq, 2, 0, 42, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),
       persona(d, 10),
-      persona(e, 15)
+      persona(e, 15),
+      persona(j, 20)
 ], [])).
 
 % Estado Final
@@ -43,7 +44,23 @@ move(bridges_torch(der, _, _, _, _, PersonasDerecha), PersonaQueViajara):-
       create_combination(1, PersonasDerecha, PersonaQueViajara).
 % Si la antorcha se encuentra a la izquierda, tomar N personas de la izquierda
 move(bridges_torch(izq, N, _, _, PersonasIzquierda, _), PersonasQueViajan):-
-      create_combination(N, PersonasIzquierda, PersonasQueViajan).
+      deben_viajar(N, PersonasIzquierda, NViajeros),
+      create_combination(NViajeros, PersonasIzquierda, PersonasQueViajan).
+
+/**
+ * Obtiene el numero de personas que deben viajar
+ * N es el numero maximo de personas
+ * Personas es la lista de personas que hay en el extremo
+ * R el numero de personas que deben viajar
+ */
+deben_viajar(N, Personas, R):-
+      length(Personas, PersonasLength),
+      PersonasLength < N,
+      R is PersonasLength.
+deben_viajar(N, Personas, R):- 
+      length(Personas, PersonasLength), 
+      PersonasLength >= N, 
+      R is N.
 
 % Obtiene todas las posibles combinaciones de List
 % con una longitud de Size 
