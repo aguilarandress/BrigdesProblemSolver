@@ -1,7 +1,10 @@
 /**
-* Lenguajes de Programacion - Tarea Programada 2
-* Andres Esteban Aguilar Moya - 2019156214
-*/
+ * Andres Esteban Aguilar Moya - 2019156214
+ * Lenguajes de Programacion - Tarea Programada 2
+ */
+
+/* Correr esta linea para desplegar todo el arreglo de movidas */
+% set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(0), spacing(next_argument)]).
 
 % Si se llega al estado final, se termina la solucion
 solve_bridges_depth_first(Estado, _, []) :- final_state(Estado).
@@ -26,7 +29,7 @@ test_solution(Problema,Movidas) :-
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 3, 0, 21, [
+initial_state(bridges_torch, bridges_torch(izq, 2, 0, 28, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),

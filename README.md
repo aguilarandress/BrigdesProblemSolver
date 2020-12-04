@@ -2,23 +2,25 @@
 
 > Programa en prolog para resolver el problema del puente y la antorcha
 
-## Quick start
-
-```bash
-$ swipl # Run Prolog in directory
-```
-
-### Use
-
-```bash
-?- [file_name]. # Load Prolog file
-
-?- test_solution(bridges_torch, L). # Run Depth first
-```
-
 ## Curso
 
 Lenguajes de Programacion
+
+## Utilizar programa
+
+```bash
+$ swipl # Correr prolog en el directorio
+```
+
+### Soluciones
+
+```bash
+?- [file_name]. # Cargar archivo de prolog
+
+?- test_solution(bridges_torch, L). # Correr solucion Depth First
+
+?- test_hill_climb(bridges_torch, L). # Correr solucion Hill Climb
+```
 
 ## Program Info
 

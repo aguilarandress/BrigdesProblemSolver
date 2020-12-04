@@ -46,23 +46,12 @@ evaluate_and_order([Movida|Movidas], Estado, MVs, OrderedMVs) :-
 evaluate_and_order([],_,MVs,MVs).
 
 /**
- * value(Estado, Valor).
- * Dado un estado se calcula su valor en base a la 
- * cantidad de personas del lazo izquierdo
+ * value(Estado, Valor)
+ * Dado un estado calcula el valor de la movida realizada
+ * Entre menor sea el tiempo actual, mejor el valor
  */
-value(bridges_torch(_, _, _, _, LadoIzquierdo, LadoDerecho), Valor) :-
-      % Obtener el total de personas en el estado
-      get_personas_total(LadoIzquierdo, LadoDerecho, Longitud),
-      % Obtener longitud del lado izquierdo   
-      length(LadoIzquierdo, LongitudIzquierda),    
-      % Calcular valor en base a la cantidad de personas a la izquierda               
-      Valor is Longitud - LongitudIzquierda.
-
-% Obtiene el total de personas en el estado
-get_personas_total(LadoIzquierdo, LadoDerecho, Longitud) :-
-      length(LadoIzquierdo, Largo1),
-      length(LadoDerecho, Largo2),
-      Longitud is Largo1 + Largo2.
+value(bridges_torch(_, _, TActual, TMaximo, _, _), Valor) :-
+      Valor is TMaximo - TActual.
 
 /**
  * Inserta un par nuevo en la lista de movidas
@@ -87,12 +76,13 @@ test_hill_climb(Problema, Movidas) :-
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 2, 0, 28, [
+initial_state(bridges_torch, bridges_torch(izq, 3, 0, 30, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),
       persona(d, 10),
-      persona(e, 15)
+      persona(e, 15),
+      persona(j, 20)
 ], [])).
 
 % Estado Final
