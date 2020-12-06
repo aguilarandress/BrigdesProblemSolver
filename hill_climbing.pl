@@ -48,11 +48,37 @@ evaluate_and_order([],_,MVs,MVs).
 /**
  * value(Estado, Valor)
  * Dado un estado calcula el valor de la movida realizada
- * Entre menor sea el tiempo actual, mejor el valor
+ * Mayor valor significa mejor Estado
+ * Siempre se mueve el mas rapido hacia la izquierda
  */
-value(bridges_torch(_, _, TActual, TMaximo, _, _), Valor) :-
+value(bridges_torch(izq, _, TActual, TMaximo, _, _), Valor) :-
       Valor is TMaximo - TActual.
+/**
+ * Para obtener la mejor primer movida posible,
+ * se deben mover los dos mas rapidos.
+ * Esto se da cuando el tiempo actual es igual
+ * a la persona mas lenta de la derecha.
+ */
+value(bridges_torch(der, _, TActual, TMaximo, _, PDerecha), Valor) :-
+      create_list_of_times(PDerecha, TiemposDer),
+      max_list(TiemposDer, TActual),
+      Valor is TMaximo - TActual, !.
+/**
+ * Cuando se mueve a la derecha siempre se busca 
+ * darle prioridad a los mas lentos
+ */
+value(bridges_torch(der, _, _, _, _, PDerecha), Valor) :-
+      sum_list(PDerecha, Valor).
 
+/**
+ * sum_list(Lista, Sumatoria).
+ * Suma todos los valores de Lista
+ */
+sum_list([], 0).
+sum_list([persona(_, Tiempo)|T], Resultado) :-
+      sum_list(T, R),
+      Resultado is Tiempo + R.
+      
 /**
  * Inserta un par nuevo en la lista de movidas
  * Una vez insertadas se ordenan por su evaluacion
@@ -140,13 +166,13 @@ update_antorcha(izq, der).
 update_antorcha(der, izq).
 
 % Tomar personas de la izquierda y moverlas a la derecha
-update_extremos(izq, PersonasViajando, PersonasIzquierda1, PersonasDerecha1, PersonasIzquierda2, PersonasDerecha2):-
-      take(PersonasViajando, PersonasIzquierda1, PersonasIzquierda2),
-      append(PersonasViajando, PersonasDerecha1, PersonasDerecha2).
+update_extremos(izq, PViajando, PIzq1, PDer1, PIzq2, PDer2):-
+      take(PViajando, PIzq1, PIzq2),
+      append(PViajando, PDer1, PDer2).
 % Tomar personas de la derecha y moverlas a la izquierda
-update_extremos(der, PersonasViajando, PersonasIzquierda1, PersonasDerecha1, PersonasIzquierda2, PersonasDerecha2):-
-      take(PersonasViajando, PersonasDerecha1, PersonasDerecha2),
-      append(PersonasViajando, PersonasIzquierda1, PersonasIzquierda2).
+update_extremos(der, PViajando, PIzq1, PDer1, PIzq2, PDer2):-
+      take(PViajando, PDer1, PDer2),
+      append(PViajando, PIzq1, PIzq2).
 
 % Elimina todos los elementos de la lista L
 % que se encuentran en la lista S

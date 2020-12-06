@@ -29,7 +29,7 @@ test_solution(Problema,Movidas) :-
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 2, 0, 28, [
+initial_state(bridges_torch, bridges_torch(izq, 3, 0, 21, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),
@@ -92,13 +92,13 @@ update_antorcha(izq, der).
 update_antorcha(der, izq).
 
 % Tomar personas de la izquierda y moverlas a la derecha
-update_extremos(izq, PersonasViajando, PersonasIzquierda1, PersonasDerecha1, PersonasIzquierda2, PersonasDerecha2):-
-      take(PersonasViajando, PersonasIzquierda1, PersonasIzquierda2),
-      append(PersonasViajando, PersonasDerecha1, PersonasDerecha2).
+update_extremos(izq, PViajando, PIzq1, PDer1, PIzq2, PDer2):-
+      take(PViajando, PIzq1, PIzq2),
+      append(PViajando, PDer1, PDer2).
 % Tomar personas de la derecha y moverlas a la izquierda
-update_extremos(der, PersonasViajando, PersonasIzquierda1, PersonasDerecha1, PersonasIzquierda2, PersonasDerecha2):-
-      take(PersonasViajando, PersonasDerecha1, PersonasDerecha2),
-      append(PersonasViajando, PersonasIzquierda1, PersonasIzquierda2).
+update_extremos(der, PViajando, PIzq1, PDer1, PIzq2, PDer2):-
+      take(PViajando, PDer1, PDer2),
+      append(PViajando, PIzq1, PIzq2).
 
 % Elimina todos los elementos de la lista L
 % que se encuentran en la lista S
