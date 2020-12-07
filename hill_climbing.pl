@@ -102,7 +102,7 @@ test_hill_climb(Problema, Movidas) :-
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 3, 0, 30, [
+initial_state(bridges_torch, bridges_torch(izq, 2, 0, 42, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),

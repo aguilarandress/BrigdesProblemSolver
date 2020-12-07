@@ -21,7 +21,7 @@ solve_bridges_depth_first(Estado,Historia,[Movida|Movidas]) :-
  *   Problema: nombre del problema.
  *   Movidas: movidas requeridas para resolver el problema.
  */
-test_solution(Problema,Movidas) :-
+test_depth_first(Problema,Movidas) :-
       initial_state(Problema,Estado),                      % Obtener un Estado inicial dado Problema
       solve_bridges_depth_first(Estado,[Estado],Movidas).  % Inicia resolucion desde estado
 
