@@ -142,7 +142,6 @@ insertPoint(Point,[Point1|Points],[Point1|Points1]) :-
 insertPoint(Point,[Point1|Points],[Point,Point1|Points]) :-
     same(Point,Point1).
 
-
 /*
  * relaciones de comparación de puntos
  *
@@ -172,19 +171,17 @@ test_best_search(Problema,Movidas) :-
    initial_state(Problema,Estado),   % obtener un Estado inicial dado Problema
    value(Estado,Valor),             % calcula el valor heurístico del estado incial
    solve_best([punto(Estado,[],Valor)],[Estado],Movidas). % inicializa frontera e historial,
-                                                      % inicia resolución
 
 /**
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 2, 0, 42, [
+initial_state(bridges_torch, bridges_torch(izq, 3, 0, 21, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),
       persona(d, 10),
-      persona(e, 15),
-      persona(j, 20)
+      persona(e, 15)
 ], [])).
 
 % Estado Final
