@@ -11,7 +11,7 @@
  */
 solve_best([punto(Estado, Ruta, _)|_], _, Movidas) :-
   % Si se llega a un estado final, no se buscan mas movidas
-  final_state(Estado), 
+  final_state(Estado),
   % Se le da reversa al orden de la ruta para las Movidas
   reverse(Ruta, Movidas).
 
@@ -49,51 +49,46 @@ updates([M|Ms], Ruta, S, [(S1, [M|Ruta])|Ss]) :-
 updates([],_,_,[]).
 
 /*
- * legasls(States,States1)
- *   States1 es el subconjunto de la lista State que son estados legales.
- *   Maneja pares (Estado,Ruta).
+ * legasls(Estados, Estados2)
+ *  Obtiene los estados legales de Estados
+ *  Maneja pares (Estado,Ruta).
  */
 
-% el primer estado es legal, incluirlo en la nueva lista
+% El primer estado es legal, incluirlo en la nueva lista
 legals([(S, P)|Estados],[(S,P)|Estados1]) :-
     legal(S),
     legals(Estados,Estados1).
-% primer estado ilegal, excluirlo de la nueva lista
+% Primer estado ilegal, excluirlo de la nueva lista
 legals([(S,_)|Estados], Estados1) :-
     not(legal(S)),
     legals(Estados,Estados1).    
 legals([],[]).
 
 /*
- * news(States,History,States1)
- *   States1 es el subconjunto de la lista States que consiste de estados
- *   que no aparecen en el historial.
- *   Maneja pares (Estado,Ruta).
+ * news(Estados, Historial, Estados1)
+ * Obtiene aquellos Estados que no hayan sido visitados
+ * Estos son almacenados en Estados1
+ * Maneja pares (Estado,Ruta).
  */
-
 % primer estado ya aparece en historial, excluirlo de la nueva lista
-news([(S,_)|States],History,States1) :-
-    member(S,History),
-    news(States,History,States1).
-
+news([(S, _)|Estados], Historial, Estados1) :-
+    member(S, Historial),
+    news(Estados, Historial, Estados1).
 % primer estado no aparece en historial, incluirlo en nueva lista
-news([(S,P)|States],History,[(S,P)|States1]) :-
-    not(member(S,History)),
-    news(States,History,States1).
-    
+news([(S, P)|Estados], Historial, [(S, P)|Estados1]) :-
+    not(member(S, Historial)),
+    news(Estados, Historial, Estados1).
 news([],_,[]).
 
 /*
  * evaluates(States,Values)
- *   Calcula el valor heurístico de los estados en la lista States.
- *   Values is la lista resultante con los estados junto con sus valores.
- *   La lista State consiste de pares (Estado,Ruta).
- *   La lista Values consiste de estructuras punto(Estado,Ruta,Valor).
+ *  Calcula el valor heuristico para todos los valores
+ *  La lista Estados consiste de pares (Estado,Ruta).
+ *  La lista Valores consiste de estructuras punto(Estado,Ruta,Valor).
  */
-
-evaluates([(S,P)|States],[punto(S,P,V)|Values]) :-
-    value(S,V),                % calcula valor heurístico del estado S
-    evaluates(States,Values).  % procesa resto de estados
+evaluates([(S, P)|Estados], [punto(S,P,V)|Valores]) :-
+    value(S, V),                  % calcula valor heurístico del estado S
+    evaluates(Estados, Valores).  % procesa resto de estados
 evaluates([],[]).
 
 /*
@@ -103,11 +98,10 @@ evaluates([],[]).
  *   Los puntos son insertados preservando el orden descendente en el
  *   valor heurístico.
  */
-
-inserts([Punto|Puntos],Frontier,Frontier1) :-
-    insertPoint(Punto,Frontier,Frontier0),  % inserta primer punto
-    inserts(Puntos,Frontier0,Frontier1).    % recursivamente inserta los demás puntos
-inserts([],Frontier,Frontier).
+inserts([Punto|Puntos], Frontier, Frontier1) :-
+    insertPoint(Punto, Frontier, Frontier0),  % inserta primer punto
+    inserts(Puntos, Frontier0, Frontier1).    % recursivamente inserta los demás puntos
+inserts([], Frontier, Frontier).
 
 
 /*
@@ -117,30 +111,30 @@ inserts([],Frontier,Frontier).
  *   del valor heurístico.
  *
  */
-insertPoint(Point,[],[Point]).
+insertPoint(Point, [], [Point]).
 
 % nuevo punto es mejor que el primero de la frontera,
 % va de primero en nueva frontera
-insertPoint(Point,[Point1|Points],[Point1,Point|Points]) :-
-    less_than(Point1,Point).
+insertPoint(Point, [Point1|Points], [Point1,Point|Points]) :-
+    less_than(Point1, Point).
 
 % nuevo punto es igual al primero de la frontera,
 % nuevo punto se ignora y se deja la frontera sin cambios
-insertPoint(Point,[Point1|Points],[Point|Points]) :-
-    equals(Point,Point1).
+insertPoint(Point, [Point1|Points], [Point|Points]) :-
+    equals(Point, Point1).
 
 % nuevo punto es peor que el primero de la frontera,
 % el primero de la frontera de deja en el primer lugar y
 % el nuevo punto se inserta recursivamente dentro del resto de la frontera
-insertPoint(Point,[Point1|Points],[Point1|Points1]) :-
-    less_than(Point,Point1),
-    insertPoint(Point,Points,Points1).
+insertPoint(Point, [Point1|Points], [Point1|Points1]) :-
+    less_than(Point, Point1),
+    insertPoint(Point, Points, Points1).
 
 % nuevo punto no es igual a primero de la frontera pero tiene
 % el mismo valor heurístico, se pone al nuevo punto como primero
 % en la nueva frontera
-insertPoint(Point,[Point1|Points],[Point,Point1|Points]) :-
-    same(Point,Point1).
+insertPoint(Point, [Point1|Points], [Point,Point1|Points]) :-
+    same(Point, Point1).
 
 /*
  * relaciones de comparación de puntos
@@ -151,21 +145,21 @@ insertPoint(Point,[Point1|Points],[Point,Point1|Points]) :-
 
 % dos puntos son iguales si contienen el mismo estado y tienen el mismo valor;
 % se ignoran las rutas: no importa cómo se haya llegado al mismo estado
-equals(punto(S,_,V),punto(S,_,V)).
+equals(punto(S, _, V), punto(S, _, V)).
 
 % un punto es menor que otro, si contienen diferentes estados y si el
 % valor del primero es menor que el valor del segundo;
 % las rutas son ignoradas
-less_than(punto(S1,_,V1),punto(S2,_,V2)) :- S1 \= S2, V1 < V2.
+less_than(punto(S1, _, V1), punto(S2, _, V2)) :- S1 \= S2, V1 < V2.
 
 % dos puntos tienen el mismo valor si contienen diferentes estados
 % y si sus valores son iguales
-same(punto(S1,_,V1),punto(S2,_,V2)) :- S1 \= S2, V1 = V2.
+same(punto(S1, _, V1), punto(S2, _, V2)) :- S1 \= S2, V1 = V2.
 
 /*
  * Inicializa un problema y lo resuelve.
- *   Problem: nombre del problema.
- *   Moves: movidas requeridas para resolver el problema.
+ *   Problema: nombre del problema.
+ *   Movidas: movidas requeridas para resolver el problema.
  */
 test_best_search(Problema,Movidas) :-
    initial_state(Problema,Estado),   % obtener un Estado inicial dado Problema
@@ -176,12 +170,35 @@ test_best_search(Problema,Movidas) :-
  * Estado Inicial
  * bridges_torch(Antorcha, CapacidadPuente, TiempoActual, TiempoLimite, LadoIzquierdo, LadoDerecho)
  */
-initial_state(bridges_torch, bridges_torch(izq, 3, 0, 21, [
+initial_state(bridges_torch1, bridges_torch(izq, 2, 0, 28, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),
       persona(d, 10),
       persona(e, 15)
+], [])).
+initial_state(bridges_torch2, bridges_torch(izq, 3, 0, 21, [
+      persona(a, 1),
+      persona(b, 2),
+      persona(c, 5),
+      persona(d, 10),
+      persona(e, 15)
+], [])).
+initial_state(bridges_torch3, bridges_torch(izq, 2, 0, 42, [
+      persona(a, 1),
+      persona(b, 2),
+      persona(c, 5),
+      persona(d, 10),
+      persona(e, 15),
+      persona(j, 20)
+], [])).
+initial_state(bridges_torch4, bridges_torch(izq, 3, 0, 30, [
+      persona(a, 1),
+      persona(b, 2),
+      persona(c, 5),
+      persona(d, 10),
+      persona(e, 15),
+      persona(j, 20)
 ], [])).
 
 % Estado Final
@@ -277,14 +294,13 @@ legal(bridges_torch(_, _, TiempoActual, TiempoLimite, _, _)):-
 % Verificar que el estado no sobrepase el tiempo limite
 ilegal(TiempoActual, TiempoLimite):- TiempoActual > TiempoLimite.
 
-value(bridges_torch(izq, _, _, _, _, []), 1).
-
 /**
  * value(Estado, Valor)
  * Dado un estado calcula el valor de la movida realizada
  * Mayor valor significa mejor Estado
  * Siempre se mueve el mas rapido hacia la izquierda
  */
+value(bridges_torch(izq, _, _, _, _, []), 0).
 value(bridges_torch(izq, _, TActual, TMaximo, _, _), Valor) :-
       Valor is TMaximo - TActual.
 /**

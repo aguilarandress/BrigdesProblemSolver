@@ -51,7 +51,7 @@ initial_state(bridges_torch3, bridges_torch(izq, 2, 0, 42, [
       persona(e, 15),
       persona(j, 20)
 ], [])).
-initial_state(bridges_torch3, bridges_torch(izq, 3, 0, 30, [
+initial_state(bridges_torch4, bridges_torch(izq, 3, 0, 30, [
       persona(a, 1),
       persona(b, 2),
       persona(c, 5),
