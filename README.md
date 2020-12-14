@@ -17,9 +17,11 @@ $ swipl # Correr prolog en el directorio
 ```bash
 ?- [file_name]. # Cargar archivo de prolog
 
-?- test_solution(bridges_torch, L). # Correr solucion Depth First
+?- test_depth_first(bridges_torch1, L). # Correr solucion Depth First
 
-?- test_hill_climb(bridges_torch, L). # Correr solucion Hill Climb
+?- test_hill_climb(bridges_torch1, L). # Correr solucion Hill Climb
+
+?- test_best_first(bridges_torch1, L). # Correr solucion Best first
 ```
 
 ## Program Info
